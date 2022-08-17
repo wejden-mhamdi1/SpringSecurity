@@ -1,8 +1,11 @@
 package com.example.demo.Email;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import com.example.demo.Email.MailRequest;
+import com.example.demo.Entity.User;
+
 import lombok.Data;
 @Service
 public class EmailService {
@@ -24,20 +29,28 @@ public class EmailService {
 
 	@Autowired
 	private Configuration config;
-	@Async
 	
-	public MailResponse sendEmail(MailRequest  mailRequest) {
+	
+	public MailResponse sendEmail(MailRequest mailRequest) {
 		MailResponse response = new MailResponse();
 		MimeMessage message = sender.createMimeMessage();
+		User user = new User();
 		try {
+			// set mediaType
 			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
 					StandardCharsets.UTF_8.name());
-			helper.addAttachment("logo.png", new ClassPathResource("logo.png"));
+			
+			// add attachment
+			String activationToken = UUID.randomUUID().toString();
+			user.setActivationToken(activationToken);
 			Template t = config.getTemplate("email-template.ftl");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("bonjourOrBonsoir", GetMessageBonsoirOrBonjour());
-			model.put("name", mailRequest.getName());
+			model.put("name", "welcome in ATB");
 			model.put("body", mailRequest.getBody());
+			
+			
+			//model2.addAttribute("tokenactive",user.setActivationToken(activationToken) );
 			
 			model.put("buttonTitle", mailRequest.getButtonTitle());
 			model.put("buttonHref", mailRequest.getButtonHref());
@@ -67,11 +80,8 @@ public class EmailService {
 
 		return response;
 	}
-	@Data
-	class MailResponse {
-		private String message;
-		private boolean status;
-	}
+
+
 
 
 	           

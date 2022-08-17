@@ -122,21 +122,25 @@ public class UserService implements IUserService, UserDetailsService {
 		user.setConfirmepassword(bCryptPasswordEncoder.encode(user.getConfirmepassword()));
 		//DATE DE CREATTION DE COMPTE	
 		user.setCreatedAt(Curent.getCurrentDate());
-		//envoyerMail
-		MailRequest mailRequest = new MailRequest(user.getLastName().toUpperCase() + " " + user.getUserName(),
-		user.getEmail(), "Verification de votre compte", "Veuillez verifier votre compte",
-	   "Activer votre compte", "http://localhost:4200/activateAccount/" );
-		 emailService.sendEmail(mailRequest);
-		 User userEmail;
-			userEmail = this.getUserByEmail(user.getEmail());
-			if (!(userEmail == null))
-			throw new MailExist("User exist");
+		user.setUserName(user.getUserName());
+		String activationToken = UUID.randomUUID().toString();
+		
+		MailRequest mailRequest = new MailRequest(user.getUserName().toUpperCase() + " " + user.getUserName(),
+				user.getEmail(), "Verification de votre compte", "Veuillez verifier votre compte",
+				"Activer votre compte", "http://localhost:4200/activateAccount/" + activationToken);
+		//mailRequest.setTLS(true); 
+		emailService.sendEmail(mailRequest);
+		// Fin
+		User userEmail;
+		userEmail = this.getUserByEmail(user.getEmail()); //user.getEmail()
+		
 			this.userRepository.save(user);
 			//enregistrer le mdp
 			 ModelSavePassword passwordHistory = new ModelSavePassword(user, user.getPassword(), Curent.getCurrentDate());
 			 m.addPasswordHistory(passwordHistory);
 				return user;
 	}
+	
 	/*    ##################################### ACTIVER COMPTE #####################################*/
 	public String activecompte (String username){
 		User user=userRepository.findByUserName(username);

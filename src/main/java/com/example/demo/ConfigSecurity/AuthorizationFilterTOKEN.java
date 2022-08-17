@@ -6,6 +6,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.stream;
@@ -29,7 +31,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @Slf4j
 public class AuthorizationFilterTOKEN extends OncePerRequestFilter {
 
-	  @Override
+	/*  @Override
 	    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 	        if(request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
 	            filterChain.doFilter(request, response);
@@ -66,4 +68,57 @@ public class AuthorizationFilterTOKEN extends OncePerRequestFilter {
 	            }
 	        }
 	    }
+	}*/
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
+			                        FilterChain filterChain)
+			throws ServletException, IOException {
+	response.addHeader("Access-Control-Allow-Origin", "*");
+	response.addHeader("Access-Control-Allow-Methods",	"GET,HEAD,OPTIONS,POST,PUT,DELETE");
+	response.addHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Origin,Accept, "
+			+ "X-Requested-With, Content-Type, Access-Control-Request-Method,	"
+			+ "Access-Control-Request-Headers, Authorization");
+	response.addHeader("Access-Control-Expose-Headers","Authorization, Access-ControlAllow-Origin,Access-Control-Allow-Credentials ");
+	response.addHeader("Access-Control-Expose-Headers","userconnected");
+	if (request.getMethod().equals("OPTIONS"))
+	{
+		response.setStatus(HttpServletResponse.SC_OK);
+		return;
 	}
+	String jwt = request.getHeader("Authorization");
+	
+	if (jwt==null ||!jwt.startsWith("Bearer "))
+	{
+		filterChain.doFilter(request, response);
+		return;
+	}
+	
+	JWTVerifier verifier = JWT.require(Algorithm.HMAC256("secret".getBytes())).build();
+	
+	jwt = jwt.substring("Bearer ".length());
+
+	DecodedJWT decodedJWT = verifier.verify(jwt); 
+	
+	String username = decodedJWT.getSubject();
+	
+	List<String> roles = decodedJWT.getClaims().get("roles").asList(String.class);
+	
+	Collection <GrantedAuthority> authorities = new ArrayList<>();
+	
+	for (String r :roles)
+		authorities.add(new SimpleGrantedAuthority(r));
+	
+	UsernamePasswordAuthenticationToken user =
+			new UsernamePasswordAuthenticationToken(username, null, authorities);
+	
+	SecurityContextHolder.getContext().setAuthentication(user);
+	filterChain.doFilter(request, response);
+
+
+
+}
+
+
+
+}

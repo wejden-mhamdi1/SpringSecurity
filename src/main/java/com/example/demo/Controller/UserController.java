@@ -50,8 +50,9 @@ import com.example.demo.Entity.*;
 
 
 @RestController
-@RequestMapping("/api")
-//@CrossOrigin(origins = "http://localhost:4200")
+
+
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Transactional
 public class UserController {
@@ -59,24 +60,20 @@ public class UserController {
 	
 	
 	
-	//@GetMapping("/users")
-	//****************
-	 @GetMapping("/users")
-	    public ResponseEntity<List<User>>getUsers() {
-	        return ResponseEntity.ok().body(userService.getAllUsers());
-	    }
-/*
-	@GetMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+	
+
+	@RequestMapping(path="users",method=RequestMethod.GET)
 	   
 	public List<User> getAll() {
 		return userService.getAllUsers();
-	}*/
+	}
 	
 	
-	@GetMapping("/getUserName")
-    public User getAll(String NameUser){
-        return userService.getUserByName(NameUser);
-    }
+
+	@GetMapping("/getUserName/{NameUser}")
+	public User getUser(@PathVariable("NameUser") String NameUser) {
+		return userService.getUserByName(NameUser);
+	}
 	
 	@PostMapping("/addRole")
 	public Role addRole(@RequestBody Role role){

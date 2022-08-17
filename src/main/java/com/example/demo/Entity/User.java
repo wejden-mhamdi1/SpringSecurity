@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,7 +39,8 @@ private String confirmepassword;
 private Boolean isblocked;
 
 String createdAt;
-
+@Column(columnDefinition = " varchar(255) ",nullable=true)
+String activationToken;
 private Boolean active=false;
 
 @ManyToMany(fetch = EAGER)

@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -33,12 +34,13 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
+	    	/*http.headers().addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin","*"));
 	    	AuthentificationFilterTOKEN authentificationFilterTOKEN = new AuthentificationFilterTOKEN(authenticationManagerBean());
-	    	authentificationFilterTOKEN.setFilterProcessesUrl("/api/login");
+	    	authentificationFilterTOKEN.setFilterProcessesUrl("/login");
 	    	//http.headers().addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin","*"));
 	        http.csrf().disable();
 	        http.sessionManagement().sessionCreationPolicy(STATELESS);
-	        http.authorizeRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll();
+	        http.authorizeRequests().antMatchers("/login/**", "/api/token/refresh/**").permitAll();
 	        http.authorizeRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 	       http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("ROLE_USER");
 	      //  http.authorizeRequests().antMatchers(POST, "/api/addUser/**").hasAnyAuthority("ROLE_ADMIN");
@@ -61,7 +63,18 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 	        http.addFilterBefore(new AuthorizationFilterTOKEN(), UsernamePasswordAuthenticationFilter.class);
 	      //  http.authorizeRequests().anyRequest().authenticated();
 			
-	    }
+	    }*/
+	    	http.headers().addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin","*"));
+			http.csrf().disable();
+			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			http.authorizeRequests().antMatchers("/login","/getUserName/{NameUser}","/addRole","/addUsera","/addRoleToUser/{NameUser}/{NameRole}","/token/refresh","/isEmailExist","/forgetpassword/{email}","/resetpassword/{email}/{newpass}/{cofirm}","/activecompte/{username}").permitAll();
+		//	http.authorizeRequests().antMatchers("/all").hasAuthority("ADMIN");
+			http.authorizeRequests().anyRequest().authenticated();
+			http.addFilter(new AuthentificationFilterTOKEN (authenticationManager())) ;
+			http.addFilterBefore(new AuthorizationFilterTOKEN(), UsernamePasswordAuthenticationFilter.class);
+			
+			
+		}
 
 	    @Bean
 	    @Override

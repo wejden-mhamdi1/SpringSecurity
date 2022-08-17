@@ -55,8 +55,8 @@
 <body>
 <div>
     
-    <div style='background:#4DBFBF;background-color:#4DBFBF;margin:0px auto;max-width:600px;'>
-        <table align='center' border='0' cellpadding='0' cellspacing='0' role='presentation' style='background:#4DBFBF;background-color:#4DBFBF;width:100%;'>
+    <div style='background:#4DBFBF;background-color:#9900CC;margin:0px auto;max-width:600px;'>
+        <table align='center' border='0' cellpadding='0' cellspacing='0' role='presentation' style='background:#FF0099;background-color:#9999CC;width:100%;'>
             <tbody>
             <tr>
                 <td style='direction:ltr;font-size:0px;padding:20px 0;text-align:center;vertical-align:top;'>
@@ -81,13 +81,13 @@
                             <tr>
                                 <td align='center' style='font-size:0px;padding:10px 25px;word-break:break-word;'>
                                     <div style="color:#FFFFFF;font-family:'Droid Sans', 'Helvetica Neue', Arial, sans-serif;font-size:36px;line-height:1;text-align:center;">
-                                        ${bonjourOrBonsoir} <b>${name}</b> !
+                                        ${bonjourOrBonsoir} <b>${name}</b>  !
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td align='center' style='font-size:0px;padding:10px 25px;word-break:break-word;'>
-                                    <div style="color:#187272;font-family:'Droid Sans', 'Helvetica Neue', Arial, sans-serif;font-size:16px;line-height:20px;text-align:center;">
+                                    <div style="color:#FF0000;font-family:'Droid Sans', 'Helvetica Neue', Arial, sans-serif;font-size:16px;line-height:20px;text-align:center;">
                                         ${body}
                                     </div>
                                 </td>
@@ -98,7 +98,7 @@
                                         <tr>
                                             <td align='center' bgcolor='#178F8F' role='presentation' style='background-color:#178F8F;border:none;border-radius:4px;cursor:auto;padding:10px 25px;' valign='middle'>
                                                 <a href=${buttonHref} style="background:#178F8F;color:#ffffff;font-family:'Droid Sans', 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:bold;line-height:30px;margin:0;text-decoration:none;text-transform:none;" target='_blank'>
-                                                    ${buttonTitle}
+                                                    ${buttonTitle} 
                                                 </a>
                                             </td>
                                         </tr>
